@@ -1,3 +1,4 @@
+using CulDeSacApi.Brokers.Queues;
 using CulDeSacApi.Brokers.Storages;
 using CulDeSacApi.Services.Students;
 using Microsoft.AspNetCore.Builder;
@@ -26,6 +27,7 @@ namespace CulDeSacApi
             services.AddControllers();
             services.AddDbContext<StorageBroker>();
             services.AddTransient<IStorageBroker, StorageBroker>();
+            services.AddTransient<IQueueBroker, QueueBroker>();
             services.AddTransient<IStudentService, StudentService>();
 
             services.AddSwaggerGen(c =>
