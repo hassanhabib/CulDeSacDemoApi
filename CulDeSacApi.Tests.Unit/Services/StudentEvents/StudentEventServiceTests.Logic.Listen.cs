@@ -35,7 +35,7 @@ namespace CulDeSacApi.Tests.Unit.Services.StudentEvents
 
             // then
             studentEventHandlerMock.Verify(handler =>
-                handler.Invoke(incomingStudent),
+                handler.Invoke(It.Is(SameStudentAs(incomingStudent))),
                     Times.Once());
 
             this.queueBrokerMock.Verify(broker =>
