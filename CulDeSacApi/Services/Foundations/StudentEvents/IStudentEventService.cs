@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using CulDeSacApi.Models.Students;
 
-namespace CulDeSacApi.Services.StudentEvents
+namespace CulDeSacApi.Services.Foundations.StudentEvents
 {
     public interface IStudentEventService
     {

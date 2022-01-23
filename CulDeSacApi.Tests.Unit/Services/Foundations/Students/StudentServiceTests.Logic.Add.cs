@@ -5,7 +5,7 @@ using Force.DeepCloner;
 using Moq;
 using Xunit;
 
-namespace CulDeSacApi.Tests.Unit.Services.Students
+namespace CulDeSacApi.Tests.Unit.Services.Foundations.Students
 {
     public partial class StudentServiceTests
     {

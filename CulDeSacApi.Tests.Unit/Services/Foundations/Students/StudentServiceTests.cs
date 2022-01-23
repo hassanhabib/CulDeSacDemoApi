@@ -1,10 +1,10 @@
 using CulDeSacApi.Brokers.Storages;
 using CulDeSacApi.Models.Students;
-using CulDeSacApi.Services.Students;
+using CulDeSacApi.Services.Foundations.Students;
 using Moq;
 using Tynamix.ObjectFiller;
 
-namespace CulDeSacApi.Tests.Unit.Services.Students
+namespace CulDeSacApi.Tests.Unit.Services.Foundations.Students
 {
     public partial class StudentServiceTests
     {

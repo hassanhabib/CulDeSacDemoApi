@@ -3,14 +3,14 @@ using System.Linq.Expressions;
 using System.Text;
 using CulDeSacApi.Brokers.Queues;
 using CulDeSacApi.Models.Students;
-using CulDeSacApi.Services.StudentEvents;
+using CulDeSacApi.Services.Foundations.StudentEvents;
 using KellermanSoftware.CompareNetObjects;
 using Microsoft.Azure.ServiceBus;
 using Moq;
 using Newtonsoft.Json;
 using Tynamix.ObjectFiller;
 
-namespace CulDeSacApi.Tests.Unit.Services.StudentEvents
+namespace CulDeSacApi.Tests.Unit.Services.Foundations.StudentEvents
 {
     public partial class StudentEventServiceTests
     {

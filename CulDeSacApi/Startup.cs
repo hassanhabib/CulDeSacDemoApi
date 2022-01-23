@@ -1,9 +1,9 @@
 using CulDeSacApi.Brokers.Queues;
 using CulDeSacApi.Brokers.Storages;
-using CulDeSacApi.Services.Students;
+using CulDeSacApi.Services.Foundations.StudentEvents;
+using CulDeSacApi.Services.Foundations.Students;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,6 +29,7 @@ namespace CulDeSacApi
             services.AddTransient<IStorageBroker, StorageBroker>();
             services.AddTransient<IQueueBroker, QueueBroker>();
             services.AddTransient<IStudentService, StudentService>();
+            services.AddTransient<IStudentEventService, StudentEventService>();
 
             services.AddSwaggerGen(c =>
             {

@@ -6,7 +6,7 @@ using CulDeSacApi.Models.Students;
 using Microsoft.Azure.ServiceBus;
 using Newtonsoft.Json;
 
-namespace CulDeSacApi.Services.StudentEvents
+namespace CulDeSacApi.Services.Foundations.StudentEvents
 {
     public partial class StudentEventService : IStudentEventService
     {

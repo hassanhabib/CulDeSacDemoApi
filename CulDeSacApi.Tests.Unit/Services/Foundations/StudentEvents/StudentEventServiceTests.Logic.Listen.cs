@@ -6,7 +6,7 @@ using Microsoft.Azure.ServiceBus;
 using Moq;
 using Xunit;
 
-namespace CulDeSacApi.Tests.Unit.Services.StudentEvents
+namespace CulDeSacApi.Tests.Unit.Services.Foundations.StudentEvents
 {
     public partial class StudentEventServiceTests
     {

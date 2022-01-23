@@ -2,7 +2,7 @@
 using CulDeSacApi.Brokers.Storages;
 using CulDeSacApi.Models.Students;
 
-namespace CulDeSacApi.Services.Students
+namespace CulDeSacApi.Services.Foundations.Students
 {
     public class StudentService : IStudentService
     {
