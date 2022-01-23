@@ -18,7 +18,10 @@ namespace CulDeSacApi.Services.Orchestrations.StudentEvents
 
         public void ListenToStudentEvents()
         {
-            throw new System.NotImplementedException();
+            this.studentEventService.ListenToStudentEvent(async (student) =>
+            {
+                await this.studentService.AddStudentAsync(student);
+            });
         }
     }
 }
