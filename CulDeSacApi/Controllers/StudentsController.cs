@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using CulDeSacApi.Models.Students;
-using CulDeSacApi.Services.Students;
+using CulDeSacApi.Services.Foundations.Students;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
 
