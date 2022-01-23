@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace CulDeSacApi.Brokers.Storages
 {
-    public class StorageBroker : EFxceptionsContext, IStorageBroker
+    public partial class StorageBroker : EFxceptionsContext, IStorageBroker
     {
         private readonly IConfiguration configuration;
 

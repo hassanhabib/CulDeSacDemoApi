@@ -1,6 +1,6 @@
 ﻿namespace CulDeSacApi.Brokers.Storages
 {
-    public interface IStorageBroker
+    public partial interface IStorageBroker
     {
     }
 }
