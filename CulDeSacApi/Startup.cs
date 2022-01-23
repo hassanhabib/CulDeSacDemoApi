@@ -2,6 +2,7 @@ using CulDeSacApi.Brokers.Queues;
 using CulDeSacApi.Brokers.Storages;
 using CulDeSacApi.Services.Foundations.StudentEvents;
 using CulDeSacApi.Services.Foundations.Students;
+using CulDeSacApi.Services.Orchestrations.StudentEvents;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -30,6 +31,7 @@ namespace CulDeSacApi
             services.AddTransient<IQueueBroker, QueueBroker>();
             services.AddTransient<IStudentService, StudentService>();
             services.AddTransient<IStudentEventService, StudentEventService>();
+            services.AddTransient<IStudentEventOrchestrationService, StudentEventOrchestrationService>();
 
             services.AddSwaggerGen(c =>
             {
@@ -47,10 +49,9 @@ namespace CulDeSacApi
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CulDeSacApi v1"));
             }
 
+            app.ApplicationServices.GetService<IStudentEventOrchestrationService>().ListenToStudentEvents();
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
