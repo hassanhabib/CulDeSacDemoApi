@@ -1,7 +1,11 @@
 using CulDeSacApi.Brokers.Queues;
 using CulDeSacApi.Brokers.Storages;
+using CulDeSacApi.Services.Coordinations.StudentEvents;
+using CulDeSacApi.Services.Foundations.LibraryAccounts;
+using CulDeSacApi.Services.Foundations.LibraryCards;
 using CulDeSacApi.Services.Foundations.StudentEvents;
 using CulDeSacApi.Services.Foundations.Students;
+using CulDeSacApi.Services.Orchestrations.LibraryAccounts;
 using CulDeSacApi.Services.Orchestrations.StudentEvents;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,7 +35,11 @@ namespace CulDeSacApi
             services.AddTransient<IQueueBroker, QueueBroker>();
             services.AddTransient<IStudentService, StudentService>();
             services.AddTransient<IStudentEventService, StudentEventService>();
+            services.AddTransient<ILibraryAccountService, LibraryAccountService>();
+            services.AddTransient<ILibraryCardService, LibraryCardService>();
             services.AddTransient<IStudentEventOrchestrationService, StudentEventOrchestrationService>();
+            services.AddTransient<ILibraryAccountOrchestrationService, LibraryAccountOrchestrationService>();
+            services.AddTransient<IStudentEventCoordinationService, StudentEventCoordinationService>();
 
             services.AddSwaggerGen(c =>
             {
@@ -39,7 +47,6 @@ namespace CulDeSacApi
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -49,7 +56,7 @@ namespace CulDeSacApi
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CulDeSacApi v1"));
             }
 
-            //app.ApplicationServices.GetService<IStudentEventOrchestrationService>().ListenToStudentEvents();
+            app.ApplicationServices.GetService<IStudentEventCoordinationService>().ListenToStudentEvents();
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
