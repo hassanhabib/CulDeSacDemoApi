@@ -1,4 +1,8 @@
-﻿using CulDeSacApi.Services.Orchestrations.LibraryAccounts;
+﻿using System;
+using System.Threading.Tasks;
+using CulDeSacApi.Models.LibraryAccounts;
+using CulDeSacApi.Models.Students;
+using CulDeSacApi.Services.Orchestrations.LibraryAccounts;
 using CulDeSacApi.Services.Orchestrations.StudentEvents;
 
 namespace CulDeSacApi.Services.Coordinations.StudentEvents
@@ -18,7 +22,20 @@ namespace CulDeSacApi.Services.Coordinations.StudentEvents
 
         public void ListenToStudentEvents()
         {
-            throw new System.NotImplementedException();
+            this.studentEventOrchestrationService.ListenToStudentEvents(async (student) => 
+                await AddStudentLibraryAccount(student));
+        }
+
+        private async Task AddStudentLibraryAccount(Student student)
+        {
+            var libraryAccount = new LibraryAccount
+            {
+                Id = Guid.NewGuid(),
+                StudentId = student.Id
+            };
+
+            await this.libraryAccountOrchestrationService
+                .CreateLibraryAccountAsync(libraryAccount);
         }
     }
 }
