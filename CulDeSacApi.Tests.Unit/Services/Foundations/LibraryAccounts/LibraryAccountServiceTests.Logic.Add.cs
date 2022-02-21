@@ -35,7 +35,7 @@ namespace CulDeSacApi.Tests.Unit.Services.Foundations.LibraryAccounts
                     inputLibraryAccount);
 
             // then
-            actualLibraryAccount.Should().BeEquivalentTo(actualLibraryAccount);
+            actualLibraryAccount.Should().BeEquivalentTo(expectedLibraryAccount);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertLibraryAccountAsync(inputLibraryAccount),
