@@ -10,7 +10,7 @@ namespace CulDeSacApi.Tests.Unit.Services.Foundations.LibraryAccounts
     public partial class LibraryAccountServiceTests
     {
         [Fact]
-        public async Task ShouldAddLibraryAccount()
+        public async Task ShouldAddLibraryAccountAsync()
         {
             // given
             LibraryAccount randomLibraryAccount =
@@ -41,7 +41,7 @@ namespace CulDeSacApi.Tests.Unit.Services.Foundations.LibraryAccounts
                 broker.InsertLibraryAccountAsync(inputLibraryAccount),
                     Times.Once());
 
-            //this.storageBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
