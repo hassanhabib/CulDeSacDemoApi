@@ -14,12 +14,23 @@ namespace CulDeSacApi.Tests.Unit.Services.Orchestrations.StudentEvents
             // given
             Student randomStudent = CreateRandomStudent();
             Student incomingStudent = randomStudent;
-            var studentEventHandlerMock = new Mock<Func<Student, ValueTask>>();
+            
+            var studentEventHandlerMock = 
+                new Mock<Func<Student, ValueTask>>(MockBehavior.Strict);
+            
+            var mockSequence = new MockSequence();
 
-            this.studentEventServiceMock.Setup(service =>
+            this.studentEventServiceMock.InSequence(mockSequence).Setup(service =>
                 service.ListenToStudentEvent(It.IsAny<Func<Student, ValueTask>>()))
                     .Callback<Func<Student, ValueTask>>(eventFunction =>
                         eventFunction.Invoke(incomingStudent));
+
+            this.studentServiceMock.InSequence(mockSequence).Setup(service =>
+                service.AddStudentAsync(incomingStudent))
+                    .ReturnsAsync(incomingStudent);
+
+            studentEventHandlerMock.InSequence(mockSequence).Setup(handler =>
+                handler(incomingStudent));
 
             // when
             this.studentEventOrchestrationService.ListenToStudentEvents(

@@ -16,7 +16,7 @@ namespace CulDeSacApi.Tests.Unit.Services.Orchestrations.StudentEvents
         public StudentEventOrchestrationServiceTests()
         {
             this.studentEventServiceMock = new Mock<IStudentEventService>();
-            this.studentServiceMock = new Mock<IStudentService>();
+            this.studentServiceMock = new Mock<IStudentService>(MockBehavior.Strict);
 
             this.studentEventOrchestrationService = new StudentEventOrchestrationService(
                 studentEventService: this.studentEventServiceMock.Object,

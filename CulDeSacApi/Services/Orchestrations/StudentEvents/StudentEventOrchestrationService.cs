@@ -24,6 +24,7 @@ namespace CulDeSacApi.Services.Orchestrations.StudentEvents
             this.studentEventService.ListenToStudentEvent(async (student) =>
             {
                 await this.studentService.AddStudentAsync(student);
+                await studentEventHandler(student);
             });
         }
     }
