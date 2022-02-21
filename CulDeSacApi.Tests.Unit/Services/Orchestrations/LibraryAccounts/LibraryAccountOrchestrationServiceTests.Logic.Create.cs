@@ -27,15 +27,22 @@ namespace CulDeSacApi.Tests.Unit.Services.Orchestrations.LibraryAccounts
             LibraryAccount expectedLibraryAccount =
                 addedLibraryAccount.DeepClone();
 
+            var mockSequence = new MockSequence();
+
             var expectedInputLibraryCard = new LibraryCard
             {
                 Id = Guid.NewGuid(),
                 LibraryAccountId = addedLibraryAccount.Id
             };
 
-            this.libraryAccountServiceMock.Setup(service =>
+            this.libraryAccountServiceMock.InSequence(mockSequence).Setup(service =>
                 service.AddLibraryAccountAsync(inputLibraryAccount))
                     .ReturnsAsync(addedLibraryAccount);
+
+            this.libraryCardServiceMock.InSequence(mockSequence).Setup(service =>
+                service.AddLibraryCardAsync(It.Is(
+                    SameLibraryCardAs(expectedInputLibraryCard))))
+                        .ReturnsAsync(expectedInputLibraryCard);
 
             // when
             LibraryAccount actualLibraryAccount =

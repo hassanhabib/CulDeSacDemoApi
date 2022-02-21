@@ -22,8 +22,8 @@ namespace CulDeSacApi.Tests.Unit.Services.Orchestrations.LibraryAccounts
 
         public LibraryAccountOrchestrationServiceTests()
         {
-            this.libraryAccountServiceMock = new Mock<ILibraryAccountService>();
-            this.libraryCardServiceMock = new Mock<ILibraryCardService>();
+            this.libraryAccountServiceMock = new Mock<ILibraryAccountService>(MockBehavior.Strict);
+            this.libraryCardServiceMock = new Mock<ILibraryCardService>(MockBehavior.Strict);
 
             this.libraryAccountOrchestrationService = new LibraryAccountOrchestrationService(
                 libraryAccountService: this.libraryAccountServiceMock.Object,
@@ -34,7 +34,8 @@ namespace CulDeSacApi.Tests.Unit.Services.Orchestrations.LibraryAccounts
             LibraryCard expectedLibraryCard)
         {
             return actualLibraryCard => 
-                actualLibraryCard.LibraryAccountId == expectedLibraryCard.LibraryAccountId;
+                actualLibraryCard.LibraryAccountId == expectedLibraryCard.LibraryAccountId
+                && actualLibraryCard.Id != Guid.Empty;
         }
 
         private static LibraryAccount CreateRandomLibraryAccount() =>
