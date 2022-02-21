@@ -11,9 +11,7 @@ namespace CulDeSacApi.Services.Foundations.LibraryCards
         public LibraryCardService(IStorageBroker storageBroker) =>
             this.storageBroker = storageBroker;
 
-        public ValueTask<LibraryCard> AddLibraryCardAsync(LibraryCard libraryCard)
-        {
-            throw new System.NotImplementedException();
-        }
+        public async ValueTask<LibraryCard> AddLibraryCardAsync(LibraryCard libraryCard) =>
+            await this.storageBroker.InsertLibraryCardAsync(libraryCard);
     }
 }
