@@ -1,4 +1,7 @@
-﻿using CulDeSacApi.Services.Foundations.StudentEvents;
+﻿using System;
+using System.Threading.Tasks;
+using CulDeSacApi.Models.Students;
+using CulDeSacApi.Services.Foundations.StudentEvents;
 using CulDeSacApi.Services.Foundations.Students;
 
 namespace CulDeSacApi.Services.Orchestrations.StudentEvents
@@ -16,7 +19,7 @@ namespace CulDeSacApi.Services.Orchestrations.StudentEvents
             this.studentService = studentService;
         }
 
-        public void ListenToStudentEvents()
+        public void ListenToStudentEvents(Func<Student, ValueTask> studentEventHandler)
         {
             this.studentEventService.ListenToStudentEvent(async (student) =>
             {

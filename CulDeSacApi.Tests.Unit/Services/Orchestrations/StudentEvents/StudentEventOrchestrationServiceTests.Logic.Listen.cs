@@ -14,6 +14,7 @@ namespace CulDeSacApi.Tests.Unit.Services.Orchestrations.StudentEvents
             // given
             Student randomStudent = CreateRandomStudent();
             Student incomingStudent = randomStudent;
+            var studentEventHandlerMock = new Mock<Func<Student, ValueTask>>();
 
             this.studentEventServiceMock.Setup(service =>
                 service.ListenToStudentEvent(It.IsAny<Func<Student, ValueTask>>()))
@@ -21,7 +22,8 @@ namespace CulDeSacApi.Tests.Unit.Services.Orchestrations.StudentEvents
                         eventFunction.Invoke(incomingStudent));
 
             // when
-            this.studentEventOrchestrationService.ListenToStudentEvents();
+            this.studentEventOrchestrationService.ListenToStudentEvents(
+                studentEventHandler: studentEventHandlerMock.Object);
 
             // then
             this.studentEventServiceMock.Verify(service =>
@@ -30,6 +32,10 @@ namespace CulDeSacApi.Tests.Unit.Services.Orchestrations.StudentEvents
 
             this.studentServiceMock.Verify(service =>
                 service.AddStudentAsync(incomingStudent),
+                    Times.Once);
+
+            studentEventHandlerMock.Verify(handler =>
+                handler(incomingStudent),
                     Times.Once);
 
             this.studentEventServiceMock.VerifyNoOtherCalls();
