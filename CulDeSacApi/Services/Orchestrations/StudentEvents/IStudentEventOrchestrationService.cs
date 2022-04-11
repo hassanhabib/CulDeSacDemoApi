@@ -6,6 +6,6 @@ namespace CulDeSacApi.Services.Orchestrations.StudentEvents
 {
     public interface IStudentEventOrchestrationService
     {
-        void ListenToStudentEvents(Func<Student, ValueTask> studentEventHandler);
+        void ListenToStudentEvents();
     }
 }

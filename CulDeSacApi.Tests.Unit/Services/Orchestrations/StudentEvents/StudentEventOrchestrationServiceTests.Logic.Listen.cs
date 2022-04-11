@@ -15,9 +15,6 @@ namespace CulDeSacApi.Tests.Unit.Services.Orchestrations.StudentEvents
             Student randomStudent = CreateRandomStudent();
             Student incomingStudent = randomStudent;
             
-            var studentEventHandlerMock = 
-                new Mock<Func<Student, ValueTask>>(MockBehavior.Strict);
-            
             var mockSequence = new MockSequence();
 
             this.studentEventServiceMock.InSequence(mockSequence).Setup(service =>
@@ -29,12 +26,8 @@ namespace CulDeSacApi.Tests.Unit.Services.Orchestrations.StudentEvents
                 service.AddStudentAsync(incomingStudent))
                     .ReturnsAsync(incomingStudent);
 
-            studentEventHandlerMock.InSequence(mockSequence).Setup(handler =>
-                handler(incomingStudent));
-
             // when
-            this.studentEventOrchestrationService.ListenToStudentEvents(
-                studentEventHandler: studentEventHandlerMock.Object);
+            this.studentEventOrchestrationService.ListenToStudentEvents();
 
             // then
             this.studentEventServiceMock.Verify(service =>
@@ -45,12 +38,13 @@ namespace CulDeSacApi.Tests.Unit.Services.Orchestrations.StudentEvents
                 service.AddStudentAsync(incomingStudent),
                     Times.Once);
 
-            studentEventHandlerMock.Verify(handler =>
-                handler(incomingStudent),
+            this.localStudentEventService.Verify(broker =>
+                broker.PublishStudentAsync(incomingStudent),
                     Times.Once);
 
             this.studentEventServiceMock.VerifyNoOtherCalls();
             this.studentServiceMock.VerifyNoOtherCalls();
+            this.localStudentEventService.VerifyNoOtherCalls();
         }
     }
 }

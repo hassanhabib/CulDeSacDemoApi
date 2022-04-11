@@ -1,9 +1,9 @@
 using CulDeSacApi.Brokers.Events;
 using CulDeSacApi.Brokers.Queues;
 using CulDeSacApi.Brokers.Storages;
-using CulDeSacApi.Services.Coordinations.StudentEvents;
 using CulDeSacApi.Services.Foundations.LibraryAccounts;
 using CulDeSacApi.Services.Foundations.LibraryCards;
+using CulDeSacApi.Services.Foundations.LocalStudentEvents;
 using CulDeSacApi.Services.Foundations.StudentEvents;
 using CulDeSacApi.Services.Foundations.Students;
 using CulDeSacApi.Services.Orchestrations.LibraryAccounts;
@@ -29,7 +29,6 @@ namespace CulDeSacApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
             services.AddDbContext<StorageBroker>();
             services.AddTransient<IStorageBroker, StorageBroker>();
@@ -37,11 +36,11 @@ namespace CulDeSacApi
             services.AddTransient<IEventBroker, EventBroker>();
             services.AddTransient<IStudentService, StudentService>();
             services.AddTransient<IStudentEventService, StudentEventService>();
+            services.AddTransient<ILocalStudentEventService, LocalStudentEventService>();
             services.AddTransient<ILibraryAccountService, LibraryAccountService>();
             services.AddTransient<ILibraryCardService, LibraryCardService>();
             services.AddTransient<IStudentEventOrchestrationService, StudentEventOrchestrationService>();
             services.AddTransient<ILibraryAccountOrchestrationService, LibraryAccountOrchestrationService>();
-            services.AddTransient<IStudentEventCoordinationService, StudentEventCoordinationService>();
 
             services.AddSwaggerGen(c =>
             {
@@ -58,7 +57,7 @@ namespace CulDeSacApi
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CulDeSacApi v1"));
             }
 
-            app.ApplicationServices.GetService<IStudentEventCoordinationService>().ListenToStudentEvents();
+            app.ApplicationServices.GetService<IStudentEventOrchestrationService>().ListenToStudentEvents();
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
