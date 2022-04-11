@@ -1,3 +1,4 @@
+using CulDeSacApi.Brokers.Events;
 using CulDeSacApi.Brokers.Queues;
 using CulDeSacApi.Brokers.Storages;
 using CulDeSacApi.Services.Coordinations.StudentEvents;
@@ -33,6 +34,7 @@ namespace CulDeSacApi
             services.AddDbContext<StorageBroker>();
             services.AddTransient<IStorageBroker, StorageBroker>();
             services.AddTransient<IQueueBroker, QueueBroker>();
+            services.AddTransient<IEventBroker, EventBroker>();
             services.AddTransient<IStudentService, StudentService>();
             services.AddTransient<IStudentEventService, StudentEventService>();
             services.AddTransient<ILibraryAccountService, LibraryAccountService>();
