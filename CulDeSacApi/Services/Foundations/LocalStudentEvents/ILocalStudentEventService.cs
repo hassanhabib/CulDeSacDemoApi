@@ -7,6 +7,6 @@ namespace CulDeSacApi.Services.Foundations.LocalStudentEvents
     public interface ILocalStudentEventService
     {
         void ListenToStudentEvent(Func<Student, ValueTask<Student>> studentEventHandler);
-        ValueTask<Student> PublishStudentAsync(Student student);
+        ValueTask PublishStudentAsync(Student student);
     }
 }

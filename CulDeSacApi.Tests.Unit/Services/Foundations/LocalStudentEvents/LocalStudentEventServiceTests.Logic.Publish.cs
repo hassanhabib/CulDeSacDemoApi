@@ -15,16 +15,12 @@ namespace CulDeSacApi.Tests.Unit.Services.Foundations.LocalStudentEvents
             // given
             Student randomStudent = CreateRandomStudent();
             Student inputStudent = randomStudent;
-            Student expectedStudent = inputStudent.DeepClone();
 
             // when
-            Student actualStudent =
-                await this.localStudentEventService
-                    .PublishStudentAsync(inputStudent);
+            await this.localStudentEventService
+                .PublishStudentAsync(inputStudent);
 
             // then
-            actualStudent.Should().BeEquivalentTo(expectedStudent);
-
             this.eventBrokerMock.Verify(broker =>
                 broker.PublishStudentEventAsync(inputStudent),
                     Times.Once);
