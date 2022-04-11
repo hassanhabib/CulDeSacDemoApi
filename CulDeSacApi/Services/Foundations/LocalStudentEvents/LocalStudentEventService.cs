@@ -12,10 +12,8 @@ namespace CulDeSacApi.Services.Foundations.LocalStudentEvents
         public LocalStudentEventService(IEventBroker eventBroker) =>
             this.eventBroker = eventBroker;
 
-        public void ListenToStudentEvent(Func<Student, ValueTask<Student>> studentEventHandler)
-        {
-            throw new NotImplementedException();
-        }
+        public void ListenToStudentEvent(Func<Student, ValueTask<Student>> studentEventHandler) =>
+            this.eventBroker.ListenToStudentEvent(studentEventHandler);
 
         public ValueTask<Student> PublishStudentAsync(Student student)
         {
