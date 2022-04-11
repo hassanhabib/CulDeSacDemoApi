@@ -1,6 +1,8 @@
 ﻿using CulDeSacApi.Brokers.Events;
+using CulDeSacApi.Models.Students;
 using CulDeSacApi.Services.Foundations.LocalStudentEvents;
 using Moq;
+using Tynamix.ObjectFiller;
 
 namespace CulDeSacApi.Tests.Unit.Services.Foundations.LocalStudentEvents
 {
@@ -17,5 +19,11 @@ namespace CulDeSacApi.Tests.Unit.Services.Foundations.LocalStudentEvents
             this.localStudentEventService = new LocalStudentEventService(
                 eventBroker: this.eventBrokerMock.Object);
         }
+
+        private static Student CreateRandomStudent() =>
+            CreateStudentFiller().Create();
+
+        private static Filler<Student> CreateStudentFiller() =>
+            new Filler<Student>();
     }
 }
