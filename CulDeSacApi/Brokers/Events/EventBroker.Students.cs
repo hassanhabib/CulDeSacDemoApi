@@ -6,12 +6,12 @@ namespace CulDeSacApi.Brokers.Events
 {
     public partial class EventBroker
     {
-        private Func<Student, ValueTask<Student>> studentEventHandler;
+        private static Func<Student, ValueTask<Student>> StudentEventHandler;
 
         public void ListenToStudentEvent(Func<Student, ValueTask<Student>> studentEventHandler) =>
-            this.studentEventHandler = studentEventHandler;
+            StudentEventHandler = studentEventHandler;
 
         public async ValueTask PublishStudentEventAsync(Student student) =>
-            await this.studentEventHandler(student);
+            await StudentEventHandler(student);
     }
 }

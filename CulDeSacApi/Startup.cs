@@ -57,6 +57,7 @@ namespace CulDeSacApi
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CulDeSacApi v1"));
             }
 
+            app.ApplicationServices.GetService<ILibraryAccountOrchestrationService>().ListenToLocalStudentEvent();
             app.ApplicationServices.GetService<IStudentEventOrchestrationService>().ListenToStudentEvents();
             app.UseHttpsRedirection();
             app.UseRouting();
