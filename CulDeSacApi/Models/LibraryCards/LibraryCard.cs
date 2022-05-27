@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using CulDeSacApi.Models.LibraryAccounts;
 
-namespace CulDeSacApi.Models.Students
+namespace CulDeSacApi.Models.LibraryCards
 {
-    public class Student
+    public class LibraryCard
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }
 
+        public Guid LibraryAccountId { get; set; }
         public LibraryAccount LibraryAccount { get; set; }
     }
 }

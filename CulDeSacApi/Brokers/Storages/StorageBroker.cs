@@ -14,6 +14,12 @@ namespace CulDeSacApi.Brokers.Storages
             this.Database.Migrate();
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            AddLibraryAccountsReferences(modelBuilder);
+            AddLibraryCardsReferences(modelBuilder);
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connectionString =

@@ -4,6 +4,7 @@ using CulDeSacApi.Brokers.Storages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CulDeSacApi.Migrations
 {
     [DbContext(typeof(StorageBroker))]
-    partial class StorageBrokerModelSnapshot : ModelSnapshot
+    [Migration("20220221015024_AddLibraryAccount")]
+    partial class AddLibraryAccount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,22 +41,6 @@ namespace CulDeSacApi.Migrations
                     b.ToTable("LibraryAccounts");
                 });
 
-            modelBuilder.Entity("CulDeSacApi.Models.LibraryCards.LibraryCard", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("LibraryAccountId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LibraryAccountId");
-
-                    b.ToTable("LibraryCards");
-                });
-
             modelBuilder.Entity("CulDeSacApi.Models.Students.Student", b =>
                 {
                     b.Property<Guid>("Id")
@@ -78,22 +64,6 @@ namespace CulDeSacApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("CulDeSacApi.Models.LibraryCards.LibraryCard", b =>
-                {
-                    b.HasOne("CulDeSacApi.Models.LibraryAccounts.LibraryAccount", "LibraryAccount")
-                        .WithMany("LibraryCards")
-                        .HasForeignKey("LibraryAccountId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("LibraryAccount");
-                });
-
-            modelBuilder.Entity("CulDeSacApi.Models.LibraryAccounts.LibraryAccount", b =>
-                {
-                    b.Navigation("LibraryCards");
                 });
 
             modelBuilder.Entity("CulDeSacApi.Models.Students.Student", b =>
