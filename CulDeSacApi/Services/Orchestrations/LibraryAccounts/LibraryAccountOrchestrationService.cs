@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
+using CulDeSacApi.Brokers.Loggings;
 using CulDeSacApi.Models.LibraryAccounts;
 using CulDeSacApi.Models.LibraryCards;
 using CulDeSacApi.Services.Foundations.LibraryAccounts;
@@ -8,48 +11,62 @@ using CulDeSacApi.Services.Foundations.LocalStudentEvents;
 
 namespace CulDeSacApi.Services.Orchestrations.LibraryAccounts
 {
-    public class LibraryAccountOrchestrationService : ILibraryAccountOrchestrationService
+    public partial class LibraryAccountOrchestrationService : ILibraryAccountOrchestrationService
     {
         private readonly ILibraryAccountService libraryAccountService;
         private readonly ILibraryCardService libraryCardService;
         private readonly ILocalStudentEventService localStudentEventService;
+        private readonly ILoggingBroker loggingBroker;
 
         public LibraryAccountOrchestrationService(
             ILibraryAccountService libraryAccountService,
             ILibraryCardService libraryCardService,
-            ILocalStudentEventService localStudentEventService)
+            ILocalStudentEventService localStudentEventService,
+            ILoggingBroker loggingBroker)
         {
             this.libraryAccountService = libraryAccountService;
             this.libraryCardService = libraryCardService;
             this.localStudentEventService = localStudentEventService;
+            this.loggingBroker = loggingBroker;
         }
 
-        public void ListenToLocalStudentEvent()
-        {
-            this.localStudentEventService.ListenToStudentEvent(async (student) =>
-            {
-                var libraryAccount = new LibraryAccount
+        public void ListenToLocalStudentEvent() =>
+            Trace(
+                function: () =>
                 {
-                    Id = Guid.NewGuid(),
-                    StudentId = student.Id
-                };
+                    this.localStudentEventService.ListenToStudentEvent(async (student) =>
+                    {
+                        var libraryAccount = new LibraryAccount
+                        {
+                            Id = Guid.NewGuid(),
+                            StudentId = student.Id
+                        };
 
-                await CreateLibraryAccountAsync(libraryAccount);
+                        await CreateLibraryAccountAsync(libraryAccount);
 
-                return student;
-            });
-        }
+                        return student;
+                    });
+                },
+                activityName: $"CulDeSacDemoApi.LibraryAccountOrchestrationService.ListenToLocalStudentEvent");
 
-        public async ValueTask<LibraryAccount> CreateLibraryAccountAsync(LibraryAccount libraryAccount)
-        {
-            LibraryAccount addedLibraryAccount =
-                await this.libraryAccountService
-                    .AddLibraryAccountAsync(libraryAccount);
+        public async ValueTask<LibraryAccount> CreateLibraryAccountAsync(LibraryAccount libraryAccount) =>
+            await Trace(
+                function: async () =>
+                    {
+                        LibraryAccount addedLibraryAccount =
+                            await this.libraryAccountService
+                                .AddLibraryAccountAsync(libraryAccount);
 
-            await CreateLibraryCardAsync(libraryAccount);
+                        this.loggingBroker
+                            .LogTrace($"Library Account added: {libraryAccount.Id}", Activity.Current);
 
-            return addedLibraryAccount;
-        }
+                        await CreateLibraryCardAsync(libraryAccount);
+
+                        return addedLibraryAccount;
+                    },
+                activityName: $"CulDeSacDemoApi.LibraryAccountOrchestrationService.CreateLibraryAccountAsync",
+                tags: new Dictionary<string, string> { { "LibraryAccountId", libraryAccount.Id.ToString() } },
+                baggage: new Dictionary<string, string> { { "LibraryAccountId", libraryAccount.Id.ToString() } });
 
         private async Task CreateLibraryCardAsync(LibraryAccount libraryAccount)
         {
@@ -58,6 +75,8 @@ namespace CulDeSacApi.Services.Orchestrations.LibraryAccounts
 
             await this.libraryCardService
                 .AddLibraryCardAsync(inputLibraryCard);
+
+            this.loggingBroker.LogTrace($"Library Card added: {inputLibraryCard.Id}", Activity.Current);
         }
 
         private static LibraryCard CreateLibraryCard(Guid libraryAccountId)

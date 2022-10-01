@@ -1,6 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using CulDeSacApi.Brokers.Loggings;
 using CulDeSacApi.Models.Students;
-using CulDeSacApi.Services.Foundations.Students;
+using CulDeSacApi.Services.Orchestrations.StudentEvents;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
 
@@ -8,19 +11,40 @@ namespace CulDeSacApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class StudentsController : RESTFulController
+    public partial class StudentsController : RESTFulController
     {
-        private readonly IStudentService studentService;
+        private readonly ILoggingBroker loggingBroker;
+        private readonly IStudentEventOrchestrationService studentEventOrchestrationService;
 
-        public StudentsController(IStudentService studentService) =>
-            this.studentService = studentService;
+        public StudentsController(
+            ILoggingBroker loggingBroker,
+            IStudentEventOrchestrationService studentEventOrchestrationService)
+        {
+            this.loggingBroker = loggingBroker;
+            this.studentEventOrchestrationService = studentEventOrchestrationService;
+        }
 
         [HttpPost]
-        public async ValueTask<ActionResult<Student>> PostStudentAsync(Student student)
-        {
-            Student addedStudent = await this.studentService.AddStudentAsync(student);
+        public async ValueTask<ActionResult<Student>> PostStudentAsync(Student student) =>
+            await Trace(
+                function: async () =>
+                    {
+                        this.loggingBroker.LogTrace($"Adding student: {student.Id} - {student.Name} \n" +
+                            $"ParentSpanId: {Activity.Current.ParentSpanId} \n" +
+                            $"ParentId: {Activity.Current.ParentId} \n" +
+                            $"SpanId: {Activity.Current.SpanId} \n" +
+                            $"Id: {Activity.Current.Id} \n");
 
-            return Created(addedStudent);
-        }
+                        Student addedStudent =
+                            await this.studentEventOrchestrationService.AddStudentAsync(student);
+
+                        this.loggingBroker
+                            .LogTrace($"Student added: {addedStudent.Id} - {student.Name}", Activity.Current);
+
+                        return Created(addedStudent);
+                    },
+                activityName: $"CulDeSacDemoApi.StudentsController.PostStudentAsync",
+                tags: new Dictionary<string, string> { { "StudentId", student.Id.ToString() } },
+                baggage: new Dictionary<string, string> { { "StudentId", student.Id.ToString() } });
     }
 }
