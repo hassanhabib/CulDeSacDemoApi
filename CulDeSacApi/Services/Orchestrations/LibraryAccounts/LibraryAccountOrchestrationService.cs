@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using CulDeSacApi.Brokers.Loggings;
 using CulDeSacApi.Models.LibraryAccounts;
@@ -58,7 +57,7 @@ namespace CulDeSacApi.Services.Orchestrations.LibraryAccounts
                                 .AddLibraryAccountAsync(libraryAccount);
 
                         this.loggingBroker
-                            .LogTrace($"Library Account added: {libraryAccount.Id}", Activity.Current);
+                            .LogTrace(FormatTraceMessage($"Library Account added: {libraryAccount.Id}"));
 
                         await CreateLibraryCardAsync(libraryAccount);
 
@@ -76,7 +75,8 @@ namespace CulDeSacApi.Services.Orchestrations.LibraryAccounts
             await this.libraryCardService
                 .AddLibraryCardAsync(inputLibraryCard);
 
-            this.loggingBroker.LogTrace($"Library Card added: {inputLibraryCard.Id}", Activity.Current);
+            this.loggingBroker
+                .LogTrace(FormatTraceMessage($"Library Card added: {inputLibraryCard.Id}"));
         }
 
         private static LibraryCard CreateLibraryCard(Guid libraryAccountId)

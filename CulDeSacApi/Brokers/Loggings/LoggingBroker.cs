@@ -16,17 +16,8 @@ namespace CulDeSacApi.Brokers.Loggings
         public void LogInformation(string message) =>
             logger.LogInformation(message);
 
-        public void LogTrace(string message, Activity activity = null)
+        public void LogTrace(string message)
         {
-            if (activity != null)
-            {
-                message = message + "\n" +
-                    $"ParentSpanId: {Activity.Current.ParentSpanId} \n" +
-                    $"ParentId: {Activity.Current.ParentId} \n" +
-                    $"SpanId: {Activity.Current.SpanId} \n" +
-                    $"Id: {Activity.Current.Id} \n";
-            }
-
             logger.LogTrace(message);
         }
 

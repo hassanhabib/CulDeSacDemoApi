@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using CulDeSacApi.Brokers.Loggings;
 using CulDeSacApi.Models.Students;
@@ -29,17 +28,14 @@ namespace CulDeSacApi.Controllers
             await Trace(
                 function: async () =>
                     {
-                        this.loggingBroker.LogTrace($"Adding student: {student.Id} - {student.Name} \n" +
-                            $"ParentSpanId: {Activity.Current.ParentSpanId} \n" +
-                            $"ParentId: {Activity.Current.ParentId} \n" +
-                            $"SpanId: {Activity.Current.SpanId} \n" +
-                            $"Id: {Activity.Current.Id} \n");
+                        this.loggingBroker
+                        .LogTrace(FormatTraceMessage($"Adding student: {student.Id} - {student.Name}"));
 
                         Student addedStudent =
                             await this.studentEventOrchestrationService.AddStudentAsync(student);
 
                         this.loggingBroker
-                            .LogTrace($"Student added: {addedStudent.Id} - {student.Name}", Activity.Current);
+                            .LogTrace(FormatTraceMessage($"Student added: {addedStudent.Id} - {student.Name}"));
 
                         return Created(addedStudent);
                     },

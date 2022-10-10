@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace CulDeSacApi.Services.Foundations.LocalStudentEvents
@@ -51,8 +52,18 @@ namespace CulDeSacApi.Services.Foundations.LocalStudentEvents
             {
                 activity.AddEvent(activityEvent.Value);
             }
+        }
 
-            activity.Start();
+        private static string FormatTraceMessage(string message)
+        {
+            StringBuilder traceMessage = new StringBuilder();
+            traceMessage.Append(message);
+            traceMessage.AppendLine($"ParentSpanId: {Activity.Current.ParentSpanId}");
+            traceMessage.AppendLine($"ParentId: {Activity.Current.ParentId}");
+            traceMessage.AppendLine($"SpanId: {Activity.Current.SpanId}");
+            traceMessage.AppendLine($"Id: {Activity.Current.Id}");
+
+            return traceMessage.ToString();
         }
     }
 }

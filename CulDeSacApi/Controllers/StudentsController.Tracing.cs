@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using System.Threading.Tasks;
 using CulDeSacApi.Models.Students;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,6 @@ namespace CulDeSacApi.Controllers
 {
     public partial class StudentsController
     {
-
         static readonly ActivitySource source = new ActivitySource("CulDeSacApi");
         private delegate ValueTask<ActionResult<Student>> ReturningAsyncTraceFunction();
 
@@ -55,8 +55,18 @@ namespace CulDeSacApi.Controllers
             {
                 activity.AddEvent(activityEvent.Value);
             }
+        }
 
-            activity.Start();
+        private static string FormatTraceMessage(string message)
+        {
+            StringBuilder traceMessage = new StringBuilder();
+            traceMessage.Append(message);
+            traceMessage.AppendLine($"ParentSpanId: {Activity.Current.ParentSpanId}");
+            traceMessage.AppendLine($"ParentId: {Activity.Current.ParentId}");
+            traceMessage.AppendLine($"SpanId: {Activity.Current.SpanId}");
+            traceMessage.AppendLine($"Id: {Activity.Current.Id}");
+
+            return traceMessage.ToString();
         }
     }
 }

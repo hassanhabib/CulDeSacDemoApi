@@ -1,4 +1,5 @@
-﻿using CulDeSacApi.Brokers.Loggings;
+﻿using System.Diagnostics;
+using CulDeSacApi.Brokers.Loggings;
 using CulDeSacApi.Brokers.Storages;
 using CulDeSacApi.Models.LibraryAccounts;
 using CulDeSacApi.Services.Foundations.LibraryAccounts;
@@ -17,6 +18,13 @@ namespace CulDeSacApi.Tests.Unit.Services.Foundations.LibraryAccounts
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
+
+            var activityListener = new ActivityListener
+            {
+                ShouldListenTo = s => true,
+                SampleUsingParentId = (ref ActivityCreationOptions<string> activityOptions) => ActivitySamplingResult.AllData,
+                Sample = (ref ActivityCreationOptions<ActivityContext> activityOptions) => ActivitySamplingResult.AllData
+            };
 
             this.libraryAccountService = new LibraryAccountService(
                 storageBroker: storageBrokerMock.Object,

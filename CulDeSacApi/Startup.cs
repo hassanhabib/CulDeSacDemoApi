@@ -37,17 +37,17 @@ namespace CulDeSacApi
         {
             services.AddLogging(options =>
             {
-                options.Configure(config =>
-                {
-                    // Adds the SpanId, TraceId, ParentId and
-                    // context information to the logging scope.
-                    config.ActivityTrackingOptions =
-                        ActivityTrackingOptions.SpanId
-                        | ActivityTrackingOptions.TraceId
-                        | ActivityTrackingOptions.ParentId
-                        | ActivityTrackingOptions.Tags
-                        | ActivityTrackingOptions.Baggage;
-                });
+                //options.Configure(config =>
+                //{
+                //    // Adds the SpanId, TraceId, ParentId and
+                //    // context information to the logging scope.
+                //    config.ActivityTrackingOptions =
+                //        ActivityTrackingOptions.SpanId
+                //        | ActivityTrackingOptions.TraceId
+                //        | ActivityTrackingOptions.ParentId
+                //        | ActivityTrackingOptions.Tags
+                //        | ActivityTrackingOptions.Baggage;
+                //});
                 options.AddConsole();
             });
 
@@ -84,19 +84,13 @@ namespace CulDeSacApi
                     options.AgentHost = "localhost";
                     options.AgentPort = 6831;
                 })
-                .AddSqlClientInstrumentation(options =>
-                {
-                    options.RecordException = true;
-                })
                 .AddAspNetCoreInstrumentation(options =>
                 {
                     options.Filter = (req) =>
                         !req.Request.Path.ToUriComponent().Contains("index.html", StringComparison.OrdinalIgnoreCase)
                         && !req.Request.Path.ToUriComponent().Contains("swagger", StringComparison.OrdinalIgnoreCase)
                         && !req.Request.Path.ToUriComponent().Contains("applicationinsights.azure.com", StringComparison.OrdinalIgnoreCase);
-                })
-                .AddHttpClientInstrumentation());
-
+                }));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

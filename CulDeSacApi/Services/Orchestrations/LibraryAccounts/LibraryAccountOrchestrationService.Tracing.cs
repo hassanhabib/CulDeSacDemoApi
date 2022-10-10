@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using System.Threading.Tasks;
 using CulDeSacApi.Models.LibraryAccounts;
 
@@ -18,7 +19,8 @@ namespace CulDeSacApi.Services.Orchestrations.LibraryAccounts
             Dictionary<string, string> baggage = null,
             ActivityEvent? activityEvent = null)
         {
-            using (var activity = source.StartActivity(activityName, ActivityKind.Internal)!)
+            using (var activity = new ActivitySource("CulDeSacApi")
+                .StartActivity(activityName, ActivityKind.Internal)!)
             {
                 SetupActivity(activity, tags, baggage, activityEvent);
                 var result = await function();
@@ -69,8 +71,18 @@ namespace CulDeSacApi.Services.Orchestrations.LibraryAccounts
             {
                 activity.AddEvent(activityEvent.Value);
             }
+        }
 
-            activity.Start();
+        private static string FormatTraceMessage(string message)
+        {
+            StringBuilder traceMessage = new StringBuilder();
+            traceMessage.Append(message);
+            traceMessage.AppendLine($"ParentSpanId: {Activity.Current.ParentSpanId}");
+            traceMessage.AppendLine($"ParentId: {Activity.Current.ParentId}");
+            traceMessage.AppendLine($"SpanId: {Activity.Current.SpanId}");
+            traceMessage.AppendLine($"Id: {Activity.Current.Id}");
+
+            return traceMessage.ToString();
         }
     }
 }
