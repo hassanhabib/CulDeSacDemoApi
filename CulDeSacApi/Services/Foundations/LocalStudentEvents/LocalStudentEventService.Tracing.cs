@@ -18,6 +18,15 @@ namespace CulDeSacApi.Services.Foundations.LocalStudentEvents
             ActivityEvent? activityEvent = null
             )
         {
+            var activityListener = new ActivityListener
+            {
+                ShouldListenTo = s => true,
+                SampleUsingParentId = (ref ActivityCreationOptions<string> activityOptions) => ActivitySamplingResult.AllData,
+                Sample = (ref ActivityCreationOptions<ActivityContext> activityOptions) => ActivitySamplingResult.AllData,
+            };
+
+            ActivitySource.AddActivityListener(activityListener);
+
             using (var activity = source.StartActivity(activityName, ActivityKind.Internal)!)
             {
                 SetupActivity(activity, tags, baggage, activityEvent);
