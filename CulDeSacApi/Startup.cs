@@ -35,22 +35,7 @@ namespace CulDeSacApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddLogging(options =>
-            {
-                //options.Configure(config =>
-                //{
-                //    // Adds the SpanId, TraceId, ParentId and
-                //    // context information to the logging scope.
-                //    config.ActivityTrackingOptions =
-                //        ActivityTrackingOptions.SpanId
-                //        | ActivityTrackingOptions.TraceId
-                //        | ActivityTrackingOptions.ParentId
-                //        | ActivityTrackingOptions.Tags
-                //        | ActivityTrackingOptions.Baggage;
-                //});
-                options.AddConsole();
-            });
-
+            services.AddLogging(options => options.AddConsole());
             services.AddControllers();
             services.AddDbContext<StorageBroker>();
             services.AddTransient<IStorageBroker, StorageBroker>();
