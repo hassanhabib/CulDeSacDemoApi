@@ -56,10 +56,13 @@ namespace CulDeSacApi.Services.Orchestrations.LibraryAccounts
                             await this.libraryAccountService
                                 .AddLibraryAccountAsync(libraryAccount);
 
-                        this.loggingBroker
-                            .LogTrace(FormatTraceMessage($"Library Account added: {libraryAccount.Id}"));
+                        LibraryCard addedLibraryCard = await CreateLibraryCardAsync(libraryAccount);
 
-                        await CreateLibraryCardAsync(libraryAccount);
+                        //this.loggingBroker
+                        //    .LogTrace(FormatTraceMessage($"Library Account added: {libraryAccount.Id}"));
+
+                        //this.loggingBroker
+                        //    .LogTrace(FormatTraceMessage($"Library Card added: {addedLibraryCard.Id}"));
 
                         return addedLibraryAccount;
                     },
@@ -67,16 +70,13 @@ namespace CulDeSacApi.Services.Orchestrations.LibraryAccounts
                 tags: new Dictionary<string, string> { { "LibraryAccountId", libraryAccount.Id.ToString() } },
                 baggage: new Dictionary<string, string> { { "LibraryAccountId", libraryAccount.Id.ToString() } });
 
-        private async Task CreateLibraryCardAsync(LibraryAccount libraryAccount)
+        private async ValueTask<LibraryCard> CreateLibraryCardAsync(LibraryAccount libraryAccount)
         {
             LibraryCard inputLibraryCard =
                 CreateLibraryCard(libraryAccount.Id);
 
-            await this.libraryCardService
+            return await this.libraryCardService
                 .AddLibraryCardAsync(inputLibraryCard);
-
-            this.loggingBroker
-                .LogTrace(FormatTraceMessage($"Library Card added: {inputLibraryCard.Id}"));
         }
 
         private static LibraryCard CreateLibraryCard(Guid libraryAccountId)

@@ -19,10 +19,16 @@ namespace CulDeSacApi.Services.Orchestrations.LibraryAccounts
             Dictionary<string, string> baggage = null,
             ActivityEvent? activityEvent = null)
         {
-            using (var activity = new ActivitySource("CulDeSacApi")
-                .StartActivity(activityName, ActivityKind.Internal)!)
+            var activityListener = new ActivityListener
             {
-                SetupActivity(activity, tags, baggage, activityEvent);
+                ShouldListenTo = s => true,
+                SampleUsingParentId = (ref ActivityCreationOptions<string> activityOptions) => ActivitySamplingResult.AllData,
+                Sample = (ref ActivityCreationOptions<ActivityContext> activityOptions) => ActivitySamplingResult.AllData,
+            };
+
+            using (var activity = source.StartActivity(activityName, ActivityKind.Internal)!)
+            {
+                SetupActivity(activityName, activity, tags, baggage, activityEvent);
                 var result = await function();
                 activity.Stop();
 
@@ -48,18 +54,25 @@ namespace CulDeSacApi.Services.Orchestrations.LibraryAccounts
 
             using (var activity = source.StartActivity(activityName, ActivityKind.Internal)!)
             {
-                SetupActivity(activity, tags, baggage, activityEvent);
+                SetupActivity(activityName, activity, tags, baggage, activityEvent);
                 function();
                 activity.Stop();
             }
         }
 
         private static void SetupActivity(
+            string activityName,
             Activity activity,
             Dictionary<string, string> tags = null,
             Dictionary<string, string> baggage = null,
             ActivityEvent? activityEvent = null)
         {
+            if (activity == null)
+            {
+                activity = new Activity(activityName);
+                activity.Start();
+            }
+
             if (tags != null)
             {
                 foreach (var tag in tags)

@@ -18,8 +18,14 @@ namespace CulDeSacApi.Services.Foundations.LibraryCards
             Dictionary<string, string> baggage = null,
             ActivityEvent? activityEvent = null)
         {
-            using (var activity = new ActivitySource("CulDeSacApi")
-                .StartActivity(activityName, ActivityKind.Internal)!)
+            var activityListener = new ActivityListener
+            {
+                ShouldListenTo = s => true,
+                SampleUsingParentId = (ref ActivityCreationOptions<string> activityOptions) => ActivitySamplingResult.AllData,
+                Sample = (ref ActivityCreationOptions<ActivityContext> activityOptions) => ActivitySamplingResult.AllData,
+            };
+
+            using (var activity = source.StartActivity(activityName, ActivityKind.Internal)!)
             {
                 SetupActivity(activity, tags, baggage, activityEvent);
                 var result = await function();
