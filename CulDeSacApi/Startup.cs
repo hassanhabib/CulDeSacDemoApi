@@ -73,8 +73,7 @@ namespace CulDeSacApi
                 {
                     options.Filter = (req) =>
                         !req.Request.Path.ToUriComponent().Contains("index.html", StringComparison.OrdinalIgnoreCase)
-                        && !req.Request.Path.ToUriComponent().Contains("swagger", StringComparison.OrdinalIgnoreCase)
-                        && !req.Request.Path.ToUriComponent().Contains("applicationinsights.azure.com", StringComparison.OrdinalIgnoreCase);
+                        && !req.Request.Path.ToUriComponent().Contains("swagger", StringComparison.OrdinalIgnoreCase);
                 }));
         }
 
