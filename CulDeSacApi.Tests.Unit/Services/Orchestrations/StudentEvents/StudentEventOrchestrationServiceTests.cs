@@ -1,4 +1,5 @@
-﻿using CulDeSacApi.Models.Students;
+﻿using CulDeSacApi.Brokers.Loggings;
+using CulDeSacApi.Models.Students;
 using CulDeSacApi.Services.Foundations.LocalStudentEvents;
 using CulDeSacApi.Services.Foundations.StudentEvents;
 using CulDeSacApi.Services.Foundations.Students;
@@ -13,6 +14,7 @@ namespace CulDeSacApi.Tests.Unit.Services.Orchestrations.StudentEvents
         private readonly Mock<IStudentEventService> studentEventServiceMock;
         private readonly Mock<IStudentService> studentServiceMock;
         private readonly Mock<ILocalStudentEventService> localStudentEventService;
+        private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly IStudentEventOrchestrationService studentEventOrchestrationService;
 
         public StudentEventOrchestrationServiceTests()
@@ -20,11 +22,13 @@ namespace CulDeSacApi.Tests.Unit.Services.Orchestrations.StudentEvents
             this.studentEventServiceMock = new Mock<IStudentEventService>();
             this.studentServiceMock = new Mock<IStudentService>(MockBehavior.Strict);
             this.localStudentEventService = new Mock<ILocalStudentEventService>(MockBehavior.Strict);
+            this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.studentEventOrchestrationService = new StudentEventOrchestrationService(
                 studentEventService: this.studentEventServiceMock.Object,
                 studentService: this.studentServiceMock.Object,
-                localStudentEventService: this.localStudentEventService.Object);
+                localStudentEventService: this.localStudentEventService.Object,
+                loggingBroker: this.loggingBrokerMock.Object);
         }
 
         private static Student CreateRandomStudent() =>
